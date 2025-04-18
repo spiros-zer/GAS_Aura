@@ -9,6 +9,10 @@ AAuraCharacterBase::AAuraCharacterBase()
 {
 	// Base class doesn't need to tick
 	PrimaryActorTick.bCanEverTick = false;
+
+	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon"));
+	Weapon->SetupAttachment(GetMesh(), FName(TEXT("WeaponHandSocket")));
+	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void AAuraCharacterBase::BeginPlay()
