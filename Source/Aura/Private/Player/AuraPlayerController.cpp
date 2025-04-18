@@ -6,6 +6,8 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(AuraPlayerController)
+
 AAuraPlayerController::AAuraPlayerController()
 {
 	// Making sure the PC replicates
