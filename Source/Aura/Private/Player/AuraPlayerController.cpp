@@ -3,6 +3,7 @@
 
 #include "Player/AuraPlayerController.h"
 
+#include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 
 AAuraPlayerController::AAuraPlayerController()
@@ -30,4 +31,30 @@ void AAuraPlayerController::BeginPlay()
 	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
 	InputMode.SetHideCursorDuringCapture(false);
 	SetInputMode(InputMode);
+}
+
+void AAuraPlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+
+	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
+
+	// Binding Input Actions
+	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ThisClass::Move);
+}
+
+void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
+{
+	const FVector2D InputAxisVector = InputActionValue.Get<FVector2D>();
+	
+	const FRotator YawRotation(0.f, GetControlRotation().Yaw, 0.f);
+	const FVector ForwardVector = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	const FVector RightVector = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+
+	// Move function could be called every frame, thus check if the PC has a controlled pawn 
+	if (APawn* ControlledPawn = GetPawn())
+	{
+		ControlledPawn->AddMovementInput(ForwardVector, InputAxisVector.Y);
+		ControlledPawn->AddMovementInput(RightVector, InputAxisVector.X);
+	}
 }
