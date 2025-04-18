@@ -5,6 +5,7 @@
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Interaction/HighlightInterface.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(AuraPlayerController)
 
@@ -12,6 +13,13 @@ AAuraPlayerController::AAuraPlayerController()
 {
 	// Making sure the PC replicates
 	bReplicates = true;
+}
+
+void AAuraPlayerController::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+
+	CursorTrace();
 }
 
 void AAuraPlayerController::BeginPlay()
@@ -43,6 +51,42 @@ void AAuraPlayerController::SetupInputComponent()
 
 	// Binding Input Actions
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ThisClass::Move);
+}
+
+void AAuraPlayerController::CursorTrace()
+{
+	FHitResult HitResult;
+	GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
+	if (!HitResult.bBlockingHit) return;
+
+	LastHighlightedActor = CurrentHighlightedActor;
+	CurrentHighlightedActor = HitResult.GetActor();
+
+	if (!LastHighlightedActor)
+	{
+		if (CurrentHighlightedActor)
+		{
+			// Switched to an enemy
+			CurrentHighlightedActor->HighlightActor();
+		}
+	}
+	else
+	{
+		if (!CurrentHighlightedActor)
+		{
+			// Switched to no enemy
+			LastHighlightedActor->UnhighlightActor();
+		}
+		else
+		{
+			if (LastHighlightedActor != CurrentHighlightedActor)
+			{
+				// Switched to a new enemy
+				LastHighlightedActor->UnhighlightActor();
+				CurrentHighlightedActor->HighlightActor();
+			}
+		}
+	}
 }
 
 void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
