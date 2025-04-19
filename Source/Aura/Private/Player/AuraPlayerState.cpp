@@ -11,6 +11,8 @@ AAuraPlayerState::AAuraPlayerState()
 	// GAS for the player will be on the Player State
 	AbilitySystemComponent = CreateDefaultSubobject<UAuraAbilitySystemComponent>("AbilitySystemComponent");
 	AbilitySystemComponent->SetIsReplicated(true);
+	// Using mixed so that the owning player gets the full gameplay effect
+	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
 	AttributeSet = CreateDefaultSubobject<UAuraAttributeSet>("AttributeSet");
 	
