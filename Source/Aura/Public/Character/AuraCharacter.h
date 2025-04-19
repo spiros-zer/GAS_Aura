@@ -20,6 +20,10 @@ public:
 
 	AAuraCharacter();
 
+	virtual void PossessedBy(AController* NewController) override;
+
+	virtual void OnRep_PlayerState() override;
+
 protected:
 
 	UPROPERTY(EditAnywhere, Category = "Camera")
@@ -27,4 +31,8 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category = "Camera")
 	TObjectPtr<USpringArmComponent> SpringArm;
+
+private:
+
+	void InitAbilityActorInfo();
 };

@@ -38,3 +38,11 @@ void AAuraEnemy::UnhighlightActor()
 
 	Weapon->SetRenderCustomDepth(false);
 }
+
+void AAuraEnemy::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// Since GAS is on the enemy character, the avatar as well as the owner will be the character 
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+}
