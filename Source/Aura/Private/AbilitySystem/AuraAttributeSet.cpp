@@ -3,12 +3,16 @@
 
 #include "AbilitySystem/AuraAttributeSet.h"
 
-#include "AbilitySystemComponent.h"
 #include "Net/UnrealNetwork.h"
+
+#include UE_INLINE_GENERATED_CPP_BY_NAME(AuraAttributeSet)
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
-	
+	InitHealth(100.f);
+	InitMaxHealth(100.f);
+	InitMana(50.f);
+	InitMaxMana(50.f);
 }
 
 void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
